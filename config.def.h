@@ -64,6 +64,7 @@ static const char *termcmd[]  = { "alacritty", NULL };
 static const char *browsercmd[]  = { "firefox", NULL };
 static const char *clipmenucmd[] = { "clipmenu", NULL };
 static const char *passmenucmd[] = { "passmenu", NULL };
+static const char *slockcmd[] = { "slock", NULL };
 
 #include <X11/XF86keysym.h>
 #include "movestack.c"
@@ -95,6 +96,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_l, 	   spawn,          {.v = slockcmd } },
 	{ SUPER,						XK_b,	   spawn,		   {.v = browsercmd} },
 	{ SUPER,						XK_v,	   spawn,		   {.v = clipmenucmd} },
 	{ SUPER,						XK_p,	   spawn,		   {.v = passmenucmd} },

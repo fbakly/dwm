@@ -8,6 +8,7 @@ The build is already patched, all the patches are in the patches directory.
 * base-devel (gcc, make, etc...)
 * [alacritty](https://github.com/alacritty/alacritty)
 * [dmenu](https://www.suckless.org/dmenu)
+* [FiraCode Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode)
 
 ## Software used
 
