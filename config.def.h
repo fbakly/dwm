@@ -8,16 +8,16 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "FiraCode Nerd Font:size=10" };
 static const char dmenufont[]       = "FiraCode Nerd Font:size=10";
-static const char col_gray1[]       = "#222222";
-static const char col_gray2[]       = "#444444";
-static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#005577";
-static const char col_red[] 		= "#ff0000";
-static const char *colors[][3]      = {
-	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_cyan,  col_red  },
+static char normbgcolor[]           = "#222222";
+static char normbordercolor[]       = "#444444";
+static char normfgcolor[]           = "#bbbbbb";
+static char selfgcolor[]            = "#eeeeee";
+static char selbordercolor[]        = "#005577";
+static char selbgcolor[]            = "#005577";
+static char *colors[][3] = {
+       /*               fg           bg           border   */
+       [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
+       [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
 };
 
 /* tagging */
@@ -43,6 +43,8 @@ static const Layout layouts[] = {
 	{ "[]=",      tile },    /* first entry is default */
 	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
+	{ "|M|",      centeredmaster },
+	{ ">M>",      centeredfloatingmaster },
 };
 
 /* key definitions */
@@ -58,13 +60,16 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "alacritty", NULL };
-static const char *browsercmd[]  = { "firefox", NULL };
-static const char *clipmenucmd[] = { "clipmenu", NULL };
-static const char *passmenucmd[] = { "passmenu", NULL };
-static const char *slockcmd[] = { "slock", NULL };
+static char dmenumon[2] 				= "0"; /* component of dmenucmd, manipulated in spawn() */
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
+static const char *termcmd[]  			= { "alacritty", NULL };
+static const char *browsercmd[]  		= { "firefox", NULL };
+static const char *clipmenucmd[] 		= { "clipmenu", NULL };
+static const char *passmenucmd[] 		= { "passmenu", NULL };
+static const char *slockcmd[] 			= { "slock", NULL };
+static const char *screenshot_copy[] 	= { "screenshot", NULL };
+static const char *screenshot[] 		= { "screenshot", "t", NULL };
+static const char *bltcmd[] 			= { "bltconnect", NULL };
 
 #include <X11/XF86keysym.h>
 #include "movestack.c"
@@ -86,6 +91,8 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_u,      setlayout,      {.v = &layouts[3]} },
+	{ MODKEY,                       XK_o,      setlayout,      {.v = &layouts[4]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY|ShiftMask,             XK_f,      fullscreen,     {0} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
@@ -106,6 +113,10 @@ static Key keys[] = {
 	{ 0, 							XF86XK_AudioMute, 			spawn, 		SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")  },
 	{ 0, 							XF86XK_AudioRaiseVolume, 	spawn,		SHCMD("pamixer -u -i 5; kill -44 $(pidof dwmblocks)") },
 	{ 0, 							XF86XK_AudioLowerVolume,	spawn,		SHCMD("pamixer -u -d 5; kill -44 $(pidof dwmblocks)") },
+	{ 0, 							XK_Print, 					spawn, 		{ .v = screenshot_copy } },
+	{ ShiftMask, 					XK_Print, 					spawn, 		{ .v = screenshot } },
+	{ MODKEY|ShiftMask, 			XK_b, 						spawn, 		{ .v = bltcmd } },
+	{ MODKEY,                       XK_F5,     xrdb,           {.v = NULL } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
