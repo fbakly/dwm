@@ -116,6 +116,7 @@ static Key keys[] = {
 	{ 0, 							XK_Print, 					spawn, 		{ .v = screenshot_copy } },
 	{ ShiftMask, 					XK_Print, 					spawn, 		{ .v = screenshot } },
 	{ MODKEY|ShiftMask, 			XK_b, 						spawn, 		{ .v = bltcmd } },
+	{ SUPER, 						XK_t, 						spawn, 		SHCMD("todo") },
 	{ MODKEY,                       XK_F5,     xrdb,           {.v = NULL } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
